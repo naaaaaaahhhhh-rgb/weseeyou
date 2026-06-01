@@ -12,9 +12,9 @@
 // lowercase, use hyphens, and don't change it after reveal (it would break
 // any links that have been shared).
 //
-// `motions` is the list of which Keep Hollywood Home motions this person is
-// responsible for enacting. You can edit the master list of motions in
-// `motions.ts`.
+// `motionIds` is the list of which Keep Hollywood Home motions this person is
+// responsible for enacting. Use the council file numbers from `motions.ts`,
+// e.g. ["25-1498", "25-1502"].
 
 export type DepartmentHead = {
   slug: string;
@@ -25,7 +25,7 @@ export type DepartmentHead = {
   department?: string;  // e.g. "Department of City Planning"
   photo?: string;       // path to photo file in /public, e.g. "/heads/bob-jones.jpg"
   blurb?: string;       // 2-4 sentences about what this person's job is and why they matter
-  motionIds?: string[]; // which motions they are responsible for, e.g. ["KHH-1", "KHH-3"]
+  motionIds?: string[]; // which motions they are responsible for, e.g. ["25-1498", "25-1502"]
   email?: string;       // their official city email
   // Optional: the email subject and pre-filled message specific to this person.
   // If left blank, a default will be used.
@@ -43,7 +43,7 @@ export const DEPARTMENT_HEADS: DepartmentHead[] = [
     photo: "", // leave blank for now — will use a generic placeholder
     blurb:
       "This is placeholder content. When this department head is revealed, replace this text with 2-4 sentences explaining what their job is, what they're responsible for enacting, and why holding them accountable matters.",
-    motionIds: ["KHH-1"],
+    motionIds: ["25-1498"],
     email: "placeholder@lacity.org",
   },
   {

@@ -40,15 +40,20 @@ export default function Home() {
             </div>
 
             <div className="introWrap">
-              <h1 className="kicker">We See You</h1>
               <p className="intro">
-                Earlier this year, City Council passed the Keep Hollywood Home
-                motions to protect entertainment workers and keep production in
-                Los Angeles. Months later, those motions still have not been
-                enacted. The people responsible for putting them into action
-                are city department heads — bureaucrats whose jobs are
-                literally to do this work. Each week we&apos;re revealing one of
-                them. Click their card to send a direct message: do your job.
+                On March 4, 2026, Los Angeles City Council unanimously passed
+                Councilmember Adrin Nazarian&apos;s 7{" "}
+                <Link href="/motions" className="introLink">
+                  &ldquo;Keep Hollywood Home&rdquo; motions
+                </Link>{" "}
+                — a legislative package aimed at stimulating LA&apos;s film
+                industry by cutting bureaucratic red tape. As of June
+                2026,{" "}
+                <strong>
+                  none of these motions have been enacted by the City&apos;s
+                  department heads whose jobs are literally to put these plans
+                  into action.
+                </strong>
               </p>
             </div>
           </section>
@@ -127,7 +132,7 @@ export default function Home() {
         .titleLock {
           position: relative;
           display: inline-block;
-          margin: 0 auto 18px;
+          margin: 0 auto 22px;
           padding: 0 42px;
           max-width: 100%;
         }
@@ -140,18 +145,9 @@ export default function Home() {
         }
 
         .introWrap {
-          max-width: 780px;
+          max-width: 820px;
           margin: 0 auto;
           padding: 0 12px;
-        }
-
-        .kicker {
-          font-size: 32px;
-          line-height: 1.05;
-          font-weight: 800;
-          letter-spacing: 0.02em;
-          margin: 0 0 14px;
-          text-transform: uppercase;
         }
 
         .intro {
@@ -159,6 +155,20 @@ export default function Home() {
           line-height: 1.6;
           font-weight: 400;
           margin: 0;
+        }
+
+        .intro strong {
+          font-weight: 800;
+        }
+
+        .introLink {
+          color: ${COLORS.blue};
+          text-decoration: underline;
+          font-weight: 700;
+        }
+
+        .introLink:hover {
+          text-decoration: none;
         }
 
         .cardsSection {
@@ -269,13 +279,8 @@ export default function Home() {
           }
 
           .titleLock {
-            margin-bottom: 22px;
+            margin-bottom: 26px;
             padding: 0 52px;
-          }
-
-          .kicker {
-            font-size: 44px;
-            margin-bottom: 18px;
           }
 
           .intro {
@@ -308,10 +313,6 @@ export default function Home() {
 
           .hero {
             margin-bottom: 44px;
-          }
-
-          .kicker {
-            font-size: 56px;
           }
 
           .intro {
