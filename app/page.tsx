@@ -3,11 +3,12 @@ import { DEPARTMENT_HEADS } from "./data";
 
 const COLORS = {
   blue: "#2f58b8",
+  blueDeep: "#1f3d8a",
   cream: "#f4f1ec",
+  ink: "#1a2238",
+  muted: "#6b7280",
 };
 
-// Generic silhouette SVG used for un-revealed cards. Inline so we don't need
-// an extra image file. Rendered in the cream color over a blue background.
 function Silhouette() {
   return (
     <svg
@@ -16,10 +17,11 @@ function Silhouette() {
       aria-hidden="true"
       className="silhouetteSvg"
     >
-      <circle cx="50" cy="36" r="18" fill="currentColor" />
+      <circle cx="50" cy="36" r="18" fill="currentColor" opacity="0.85" />
       <path
         d="M14 100 C 14 70, 30 58, 50 58 C 70 58, 86 70, 86 100 Z"
         fill="currentColor"
+        opacity="0.85"
       />
     </svg>
   );
@@ -30,25 +32,22 @@ export default function Home() {
     <>
       <main className="page">
         <div className="container">
-          <section className="hero">
-            <div className="titleLock">
-              <img
-                src="/STAYinLA_LogoBlue.png"
-                alt="Stay in LA"
-                className="siteLogo"
-              />
-            </div>
+          <header className="hero">
+            <img
+              src="/STAYinLA_LogoBlue.png"
+              alt="Stay in LA"
+              className="siteLogo"
+            />
 
             <div className="introWrap">
               <p className="intro">
                 On March 4, 2026, Los Angeles City Council unanimously passed
                 Councilmember Adrin Nazarian&apos;s 7{" "}
                 <Link href="/motions" className="introLink">
-                  &ldquo;Keep Hollywood Home&rdquo; motions
+                  Keep Hollywood Home motions
                 </Link>{" "}
                 — a legislative package aimed at stimulating LA&apos;s film
-                industry by cutting bureaucratic red tape. As of June
-                2026,{" "}
+                industry by cutting bureaucratic red tape. As of June 2026,{" "}
                 <strong>
                   none of these motions have been enacted by the City&apos;s
                   department heads whose jobs are literally to put these plans
@@ -56,47 +55,52 @@ export default function Home() {
                 </strong>
               </p>
             </div>
-          </section>
+          </header>
 
-          <section className="cardsSection">
+          <section className="cardsSection" aria-label="Department heads">
             <div className="cardsGrid">
               {DEPARTMENT_HEADS.map((head) => {
+                const cardInner = (
+                  <>
+                    <div
+                      className={
+                        "cardPhoto" + (head.revealed && head.photo ? "" : " cardPhotoEmpty")
+                      }
+                    >
+                      {head.revealed && head.photo ? (
+                        <img src={head.photo} alt={head.name || ""} />
+                      ) : (
+                        <Silhouette />
+                      )}
+                    </div>
+                    <div className="cardBody">
+                      <div className="cardDept">{head.department}</div>
+                      <div className="cardPos">{head.position}</div>
+                      <div className="cardName">
+                        {head.revealed && head.name ? (
+                          head.name
+                        ) : (
+                          <span className="cardNamePending">Name pending</span>
+                        )}
+                      </div>
+                    </div>
+                  </>
+                );
+
                 if (head.revealed) {
                   return (
                     <Link
                       key={head.slug}
                       href={`/${head.slug}`}
-                      className="card cardRevealed"
+                      className="card cardLink"
                     >
-                      <div className="cardPhotoWrap">
-                        {head.photo ? (
-                          <img
-                            src={head.photo}
-                            alt={head.name || ""}
-                            className="cardPhoto"
-                          />
-                        ) : (
-                          <div className="cardPhotoPlaceholder">
-                            <Silhouette />
-                          </div>
-                        )}
-                      </div>
-                      <div className="cardLabel">
-                        <div className="cardName">{head.name}</div>
-                        <div className="cardTitle">{head.title}</div>
-                      </div>
+                      {cardInner}
                     </Link>
                   );
                 }
                 return (
-                  <div key={head.slug} className="card cardMystery">
-                    <div className="cardPhotoWrap cardPhotoWrapMystery">
-                      <Silhouette />
-                    </div>
-                    <div className="cardLabel">
-                      <div className="cardName">[REDACTED]</div>
-                      <div className="cardTitle">DEPT OF ???</div>
-                    </div>
+                  <div key={head.slug} className="card cardStatic">
+                    {cardInner}
                   </div>
                 );
               })}
@@ -109,66 +113,60 @@ export default function Home() {
         .page {
           min-height: 100vh;
           background: ${COLORS.cream};
-          color: ${COLORS.blue};
+          color: ${COLORS.ink};
           font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
           overflow-x: hidden;
+          font-feature-settings: "kern" 1, "liga" 1;
+          -webkit-font-smoothing: antialiased;
         }
 
         .container {
           width: 100%;
-          max-width: 1280px;
+          max-width: 1100px;
           margin: 0 auto;
-          padding: 20px 16px 40px;
+          padding: 32px 20px 64px;
           box-sizing: border-box;
         }
 
         .hero {
           text-align: center;
-          padding-top: 20px;
-          padding-bottom: 4px;
-          margin-bottom: 28px;
-        }
-
-        .titleLock {
-          position: relative;
-          display: inline-block;
-          margin: 0 auto 22px;
-          padding: 0 42px;
-          max-width: 100%;
+          margin-bottom: 44px;
         }
 
         .siteLogo {
           display: block;
-          width: clamp(220px, 42vw, 520px);
+          width: clamp(150px, 24vw, 240px);
           height: auto;
-          margin: 0 auto;
+          margin: 0 auto 26px;
         }
 
         .introWrap {
-          max-width: 820px;
+          max-width: 640px;
           margin: 0 auto;
-          padding: 0 12px;
         }
 
         .intro {
-          font-size: 17px;
-          line-height: 1.6;
+          font-size: 16px;
+          line-height: 1.65;
           font-weight: 400;
           margin: 0;
+          color: ${COLORS.ink};
         }
 
         .intro strong {
-          font-weight: 800;
+          font-weight: 600;
+          color: ${COLORS.blueDeep};
         }
 
         .introLink {
           color: ${COLORS.blue};
           text-decoration: underline;
-          font-weight: 700;
+          text-underline-offset: 2px;
+          font-weight: 500;
         }
 
         .introLink:hover {
-          text-decoration: none;
+          color: ${COLORS.blueDeep};
         }
 
         .cardsSection {
@@ -178,36 +176,35 @@ export default function Home() {
         .cardsGrid {
           display: grid;
           grid-template-columns: repeat(2, minmax(0, 1fr));
-          gap: 14px;
+          gap: 16px;
         }
 
         .card {
           display: flex;
           flex-direction: column;
-          border: 3px solid ${COLORS.blue};
-          border-radius: 20px;
+          background: #fff;
+          border: 1px solid ${COLORS.blue}33;
+          border-radius: 6px;
           overflow: hidden;
-          background: ${COLORS.cream};
-          color: ${COLORS.blue};
           text-decoration: none;
-          transition: transform 0.15s ease, box-shadow 0.15s ease;
+          color: inherit;
+          transition: border-color 0.15s ease, box-shadow 0.15s ease;
         }
 
-        .cardRevealed {
+        .cardLink {
           cursor: pointer;
         }
 
-        .cardRevealed:hover {
-          transform: translateY(-2px);
-          box-shadow: 0 8px 24px rgba(47, 88, 184, 0.18);
+        .cardLink:hover {
+          border-color: ${COLORS.blue};
+          box-shadow: 0 2px 8px rgba(47, 88, 184, 0.08);
         }
 
-        .cardMystery {
+        .cardStatic {
           cursor: default;
-          opacity: 0.95;
         }
 
-        .cardPhotoWrap {
+        .cardPhoto {
           width: 100%;
           aspect-ratio: 1 / 1;
           background: ${COLORS.blue};
@@ -217,112 +214,93 @@ export default function Home() {
           overflow: hidden;
         }
 
-        .cardPhotoWrapMystery {
-          color: ${COLORS.cream};
-          padding: 14%;
-        }
-
-        .cardPhoto {
+        .cardPhoto img {
           width: 100%;
           height: 100%;
           object-fit: cover;
           display: block;
         }
 
-        .cardPhotoPlaceholder {
+        .cardPhotoEmpty {
           color: ${COLORS.cream};
-          width: 100%;
-          height: 100%;
-          padding: 14%;
-          box-sizing: border-box;
-          display: flex;
-          align-items: center;
-          justify-content: center;
         }
 
         .silhouetteSvg {
-          width: 100%;
-          height: 100%;
-          display: block;
+          width: 65%;
+          height: 65%;
         }
 
-        .cardLabel {
+        .cardBody {
           padding: 14px 14px 16px;
-          text-align: center;
+        }
+
+        .cardDept {
+          font-size: 11px;
+          font-weight: 600;
+          letter-spacing: 0.12em;
+          text-transform: uppercase;
+          color: ${COLORS.blue};
+          margin-bottom: 4px;
+        }
+
+        .cardPos {
+          font-size: 14px;
+          font-weight: 500;
+          line-height: 1.3;
+          color: ${COLORS.ink};
+          margin-bottom: 8px;
         }
 
         .cardName {
-          font-size: 16px;
-          font-weight: 800;
-          line-height: 1.2;
-          letter-spacing: 0.02em;
-          text-transform: uppercase;
-          margin-bottom: 4px;
-          text-wrap: balance;
+          font-size: 13px;
+          color: ${COLORS.muted};
+          line-height: 1.3;
         }
 
-        .cardTitle {
-          font-size: 13px;
-          font-weight: 400;
-          line-height: 1.35;
-          text-wrap: balance;
+        .cardNamePending {
+          font-style: italic;
+          color: ${COLORS.muted};
         }
 
         @media (min-width: 700px) {
           .container {
-            padding: 24px 24px 44px;
+            padding: 48px 24px 80px;
           }
 
           .hero {
-            padding-top: 24px;
-            margin-bottom: 36px;
+            margin-bottom: 56px;
           }
 
-          .titleLock {
-            margin-bottom: 26px;
-            padding: 0 52px;
-          }
-
-          .intro {
-            font-size: 19px;
-            line-height: 1.65;
-          }
-
-          .cardsGrid {
-            grid-template-columns: repeat(3, minmax(0, 1fr));
-            gap: 18px;
-          }
-
-          .cardLabel {
-            padding: 18px 16px 20px;
-          }
-
-          .cardName {
-            font-size: 18px;
-          }
-
-          .cardTitle {
-            font-size: 14px;
-          }
-        }
-
-        @media (min-width: 1024px) {
-          .container {
-            padding: 28px 24px 56px;
-          }
-
-          .hero {
-            margin-bottom: 44px;
+          .siteLogo {
+            margin-bottom: 32px;
           }
 
           .intro {
-            font-size: 20px;
+            font-size: 17px;
             line-height: 1.7;
           }
 
           .cardsGrid {
             grid-template-columns: repeat(3, minmax(0, 1fr));
-            gap: 22px;
+            gap: 20px;
+          }
+
+          .cardBody {
+            padding: 16px 16px 18px;
+          }
+
+          .cardPos {
+            font-size: 15px;
+          }
+
+          .cardName {
+            font-size: 13.5px;
+          }
+        }
+
+        @media (min-width: 1024px) {
+          .cardsGrid {
+            gap: 24px;
           }
         }
       `}</style>
