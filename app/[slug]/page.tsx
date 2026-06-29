@@ -4,7 +4,7 @@ import { useEffect, useMemo, useState } from "react";
 import { useParams } from "next/navigation";
 import Link from "next/link";
 import { getHeadBySlug } from "../data";
-import { getMotionsByIds } from "../motions";
+import { getMotionsByIds, Deadline } from "../motions";
 
 const COLORS = {
   blue: "#2f58b8",
@@ -41,6 +41,13 @@ function unfillTemplate(filled: string, headName: string, senderName: string) {
     result = result.replaceAll(senderName, "[Your name]");
   }
   return result;
+}
+
+// Quick overdue check used for the small "Past due" tags on the motions list.
+function motionHasOverdue(deadlines: Deadline[]): boolean {
+  const today = new Date();
+  today.setHours(0, 0, 0, 0);
+  return deadlines.some((d) => new Date(d.date + "T00:00:00") < today);
 }
 
 export default function DepartmentHeadPage() {
@@ -147,6 +154,7 @@ export default function DepartmentHeadPage() {
           <Link href="/" className="backLink">← Back</Link>
         </div>
 
+        {/* SECTION 1: Profile */}
         <section className="profile">
           <div className="profilePhoto">
             {head.photo ? (
@@ -172,31 +180,11 @@ export default function DepartmentHeadPage() {
           </div>
         </section>
 
-        {motions.length > 0 ? (
-          <section className="motionsSection">
-            <h2 className="sectionTitle">Motions they are responsible for</h2>
-            <div className="motionsList">
-              {motions.map((motion) => (
-                <article key={motion.id} className="motionRef">
-                  <div className="motionRefCode">CF {motion.code}</div>
-                  <div className="motionRefTitle">{motion.title}</div>
-                  <p className="motionRefSummary">{motion.summary}</p>
-                  <Link href="/motions" className="motionRefLink">
-                    See full motion details →
-                  </Link>
-                </article>
-              ))}
-            </div>
-          </section>
-        ) : null}
-
+        {/* SECTION 2: Email — prominent, second on the page */}
         <section className="emailSection">
-          <div className="emailHeader">
-            <h2 className="sectionTitle">Send a message</h2>
-            <div className="emailRecipient">
-              To: <strong>{head.name}</strong>
-              {head.email ? <span className="emailAddr"> · {head.email}</span> : null}
-            </div>
+          <h2 className="emailHeading">Email {head.name}</h2>
+          <div className="emailRecipient">
+            Sending to <strong>{head.email}</strong>
           </div>
 
           <div className="emailForm">
@@ -246,6 +234,28 @@ export default function DepartmentHeadPage() {
             ) : null}
           </div>
         </section>
+
+        {/* SECTION 3: Compact motion list (reference) */}
+        {motions.length > 0 ? (
+          <section className="motionsSection">
+            <h2 className="sectionTitle">Responsible for these motions</h2>
+            <ul className="motionsList">
+              {motions.map((motion) => {
+                const overdue = motionHasOverdue(motion.deadlines);
+                return (
+                  <li key={motion.id} className="motionItem">
+                    <span className="motionItemCode">CF {motion.code}</span>
+                    <span className="motionItemTitle">{motion.title}</span>
+                    {overdue ? <span className="motionItemBadge">Past due</span> : null}
+                  </li>
+                );
+              })}
+            </ul>
+            <Link href="/motions" className="motionsAllLink">
+              See full motion details →
+            </Link>
+          </section>
+        ) : null}
       </div>
 
       <style>{pageStyles}</style>
@@ -271,7 +281,7 @@ const pageStyles = `
     box-sizing: border-box;
   }
 
-  .topNav { margin-bottom: 24px; }
+  .topNav { margin-bottom: 20px; }
 
   .backLink {
     color: ${COLORS.blue};
@@ -281,15 +291,16 @@ const pageStyles = `
   }
   .backLink:hover { text-decoration: underline; text-underline-offset: 3px; }
 
+  /* ---- PROFILE ---- */
   .profile {
     display: grid;
     grid-template-columns: 1fr;
-    gap: 18px;
-    margin-bottom: 36px;
+    gap: 16px;
+    margin-bottom: 28px;
   }
 
   .profilePhoto {
-    width: 160px;
+    width: 140px;
     aspect-ratio: 1 / 1;
     background: ${COLORS.blue};
     color: ${COLORS.cream};
@@ -314,7 +325,7 @@ const pageStyles = `
     margin-bottom: 4px;
   }
   .profileName {
-    font-size: 24px;
+    font-size: 22px;
     line-height: 1.15;
     font-weight: 600;
     margin: 0 0 4px;
@@ -323,88 +334,48 @@ const pageStyles = `
   .profilePos {
     font-size: 14px;
     color: ${COLORS.blueFade};
-    margin-bottom: 12px;
+    margin-bottom: 10px;
   }
   .profileBlurb {
-    font-size: 14.5px;
-    line-height: 1.65;
+    font-size: 14px;
+    line-height: 1.6;
     margin: 0;
     text-align: left;
     color: ${COLORS.blue};
   }
 
-  .sectionTitle {
-    font-size: 10.5px;
-    font-weight: 600;
-    letter-spacing: 0.14em;
-    text-transform: uppercase;
-    margin: 0 0 12px;
-    color: ${COLORS.blueFade};
+  /* ---- EMAIL — the loud, clear CTA ---- */
+  .emailSection {
+    margin-bottom: 36px;
+    background: #fff;
+    border: 2px solid ${COLORS.blue};
+    border-radius: 8px;
+    padding: 22px 20px 24px;
   }
 
-  .motionsSection { margin-bottom: 36px; }
-
-  .motionsList {
-    display: grid;
-    grid-template-columns: 1fr;
-    gap: 12px;
-  }
-  .motionRef {
-    background: ${COLORS.cream};
-    border: 1px solid ${COLORS.blue}33;
-    border-radius: 6px;
-    padding: 16px;
-  }
-  .motionRefCode {
-    font-size: 10.5px;
-    font-weight: 600;
-    letter-spacing: 0.14em;
-    text-transform: uppercase;
-    color: ${COLORS.blueFade};
-    margin-bottom: 6px;
-  }
-  .motionRefTitle {
-    font-size: 16px;
-    font-weight: 600;
-    line-height: 1.25;
-    margin-bottom: 8px;
+  .emailHeading {
+    font-size: 22px;
+    font-weight: 700;
+    line-height: 1.15;
+    margin: 0 0 6px;
     color: ${COLORS.blue};
-  }
-  .motionRefSummary {
-    font-size: 13.5px;
-    line-height: 1.55;
-    margin: 0 0 10px;
-    color: ${COLORS.blue};
-  }
-  .motionRefLink {
-    color: ${COLORS.blue};
-    font-size: 12.5px;
-    font-weight: 500;
-    text-decoration: underline;
-    text-underline-offset: 2px;
+    letter-spacing: -0.005em;
   }
 
-  .emailSection { margin-bottom: 16px; }
-  .emailHeader { margin-bottom: 14px; }
   .emailRecipient {
     font-size: 13.5px;
-    color: ${COLORS.blue};
-    padding: 9px 12px;
-    background: ${COLORS.cream};
-    border: 1px solid ${COLORS.blue}33;
-    border-radius: 4px;
+    color: ${COLORS.blueFade};
+    margin-bottom: 16px;
     word-break: break-word;
   }
-  .emailAddr { color: ${COLORS.blueFade}; }
-
-  .emailForm {
-    background: ${COLORS.cream};
-    border: 1px solid ${COLORS.blue}33;
-    border-radius: 6px;
-    padding: 20px;
+  .emailRecipient strong {
+    color: ${COLORS.blue};
+    font-weight: 600;
   }
 
-  .field { margin-bottom: 16px; }
+  .emailForm { }
+
+  .field { margin-bottom: 14px; }
   .field:last-of-type { margin-bottom: 0; }
 
   .label {
@@ -423,12 +394,12 @@ const pageStyles = `
   }
   .input {
     width: 100%;
-    padding: 9px 11px;
+    padding: 10px 12px;
     border: 1px solid ${COLORS.blue}55;
-    background: #fff;
+    background: ${COLORS.cream};
     color: ${COLORS.blue};
     border-radius: 4px;
-    font-size: 14.5px;
+    font-size: 15px;
     font-family: inherit;
     outline: none;
     box-sizing: border-box;
@@ -436,10 +407,10 @@ const pageStyles = `
   .input:focus { border-color: ${COLORS.blue}; }
   .textarea {
     width: 100%;
-    min-height: 220px;
+    min-height: 200px;
     border-radius: 4px;
     border: 1px solid ${COLORS.blue}55;
-    background: #fff;
+    background: ${COLORS.cream};
     color: ${COLORS.blue};
     padding: 11px;
     outline: none;
@@ -451,17 +422,18 @@ const pageStyles = `
   }
   .textarea:focus { border-color: ${COLORS.blue}; }
 
-  .actions { margin-top: 16px; }
+  .actions { margin-top: 14px; }
   .sendButton {
     border: none;
     background: ${COLORS.blue};
     color: #fff;
     border-radius: 4px;
-    padding: 9px 18px;
-    font-size: 13.5px;
+    padding: 11px 22px;
+    font-size: 14px;
     font-weight: 600;
     cursor: pointer;
     font-family: inherit;
+    letter-spacing: 0.02em;
   }
   .sendButton:disabled { opacity: 0.6; cursor: default; }
 
@@ -475,6 +447,77 @@ const pageStyles = `
   .noticeSuccess { background: ${COLORS.blue}14; color: ${COLORS.blue}; }
   .noticeError { background: #fbeae8; color: ${COLORS.red}; }
 
+  /* ---- COMPACT MOTIONS LIST ---- */
+  .motionsSection {
+    border-top: 1px solid ${COLORS.blue}26;
+    padding-top: 20px;
+  }
+
+  .sectionTitle {
+    font-size: 10.5px;
+    font-weight: 600;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    margin: 0 0 12px;
+    color: ${COLORS.blueFade};
+  }
+
+  .motionsList {
+    list-style: none;
+    padding: 0;
+    margin: 0 0 12px;
+  }
+
+  .motionItem {
+    display: flex;
+    align-items: baseline;
+    gap: 10px;
+    padding: 9px 0;
+    border-bottom: 1px solid ${COLORS.blue}1a;
+    font-size: 14px;
+    line-height: 1.4;
+    flex-wrap: wrap;
+  }
+  .motionItem:last-child { border-bottom: none; }
+
+  .motionItemCode {
+    font-size: 10.5px;
+    font-weight: 600;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: ${COLORS.blueFade};
+    flex-shrink: 0;
+    min-width: 86px;
+  }
+
+  .motionItemTitle {
+    color: ${COLORS.blue};
+    font-weight: 500;
+    flex: 1;
+  }
+
+  .motionItemBadge {
+    display: inline-block;
+    font-size: 9.5px;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    background: ${COLORS.red};
+    color: #fff;
+    padding: 2px 7px;
+    border-radius: 3px;
+    flex-shrink: 0;
+  }
+
+  .motionsAllLink {
+    color: ${COLORS.blue};
+    font-size: 13px;
+    font-weight: 500;
+    text-decoration: underline;
+    text-underline-offset: 2px;
+  }
+
+  /* ---- NOT FOUND ---- */
   .notFound { text-align: center; padding: 50px 20px; color: ${COLORS.blue}; }
   .notFoundKicker {
     font-size: 11px;
@@ -487,16 +530,20 @@ const pageStyles = `
   .notFoundTitle { font-size: 22px; font-weight: 600; margin: 0 0 10px; color: ${COLORS.blue}; }
   .notFoundBody { font-size: 14px; color: ${COLORS.blueFade}; margin: 0 0 20px; }
 
+  /* ---- DESKTOP ---- */
   @media (min-width: 700px) {
-    .container { padding: 36px 28px 100px; }
+    .container { padding: 32px 28px 100px; }
+
     .profile {
-      grid-template-columns: 180px 1fr;
-      gap: 28px;
-      margin-bottom: 44px;
+      grid-template-columns: 160px 1fr;
+      gap: 24px;
+      margin-bottom: 32px;
     }
-    .profilePhoto { width: 180px; margin: 0; }
+    .profilePhoto { width: 160px; margin: 0; }
     .profileText { text-align: left; }
-    .profileName { font-size: 30px; }
-    .motionsList { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    .profileName { font-size: 28px; }
+
+    .emailSection { padding: 26px 28px 28px; }
+    .emailHeading { font-size: 26px; }
   }
 `;
