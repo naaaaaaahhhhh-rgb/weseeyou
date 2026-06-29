@@ -33,7 +33,7 @@ export const DEPARTMENT_HEADS: DepartmentHead[] = [
     department: "FilmLA",
     position: "President & CEO",
     name: "Denise Gutches",
-    photo: "", // Add a file to /public (e.g. /denise-gutches.jpg) then put the path here
+    photo: "/denise-gutches.jpg",
     blurb:
       "Denise Gutches became CEO of FilmLA on January 1, 2026, after 14 years as the organization's Chief Financial and Operating Officer. FilmLA is the nonprofit film office that handles permitting for the City of Los Angeles under contract with the Board of Public Works. Six of the seven Keep Hollywood Home motions direct FilmLA to take specific action — most of those deadlines have already passed.",
     motionIds: ["25-1498", "25-1500", "25-1501", "25-1502", "25-1509-S1", "25-1512"],
