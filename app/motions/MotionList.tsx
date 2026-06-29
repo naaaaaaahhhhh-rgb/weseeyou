@@ -1,12 +1,11 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { Motion, Deadline } from "../motions";
 
 const COLORS = {
   blue: "#2f58b8",
-  blueDeep: "#1f3d8a",
-  blueFade: "#7a8fc2",
+  blueFade: "rgba(47, 88, 184, 0.6)",
   cream: "#f4f1ec",
   red: "#a3261c",
   redLight: "#fbeae8",
@@ -35,10 +34,7 @@ function formatDate(date: string): string {
   });
 }
 
-function deadlineLabel(d: Deadline): {
-  text: string;
-  status: DeadlineStatus;
-} {
+function deadlineLabel(d: Deadline): { text: string; status: DeadlineStatus } {
   const { status, days } = statusFor(d.date);
   if (status === "overdue") {
     const n = Math.abs(days);
@@ -55,14 +51,9 @@ function motionHasOverdue(deadlines: Deadline[]): boolean {
   return deadlines.some((d) => statusFor(d.date).status === "overdue");
 }
 
-function MotionCard({
-  motion,
-  defaultOpen,
-}: {
-  motion: Motion;
-  defaultOpen: boolean;
-}) {
-  const [open, setOpen] = useState(defaultOpen);
+function MotionCard({ motion }: { motion: Motion }) {
+  // Always start closed on every device.
+  const [open, setOpen] = useState(false);
   const overdue = motionHasOverdue(motion.deadlines);
 
   return (
@@ -170,7 +161,7 @@ function MotionCard({
           align-items: center;
           justify-content: space-between;
           width: 100%;
-          padding: 16px 18px;
+          padding: 14px 16px;
           background: transparent;
           border: none;
           cursor: pointer;
@@ -186,7 +177,7 @@ function MotionCard({
           display: flex;
           align-items: center;
           gap: 10px;
-          margin-bottom: 6px;
+          margin-bottom: 4px;
           flex-wrap: wrap;
         }
 
@@ -211,11 +202,11 @@ function MotionCard({
         }
 
         .motionTitle {
-          font-size: 16px;
+          font-size: 15.5px;
           line-height: 1.25;
           font-weight: 600;
           margin: 0;
-          color: ${COLORS.blueDeep};
+          color: ${COLORS.blue};
         }
 
         .chevron {
@@ -227,16 +218,15 @@ function MotionCard({
         .chevronOpen { transform: rotate(180deg); }
 
         .motionContent {
-          padding: 0 18px 18px;
+          padding: 0 16px 16px;
           border-top: 1px solid ${COLORS.blue}1f;
-          margin-top: 0;
         }
 
         .motionSummary {
-          font-size: 14.5px;
+          font-size: 14px;
           line-height: 1.6;
           margin: 14px 0 14px;
-          color: ${COLORS.blueDeep};
+          color: ${COLORS.blue};
         }
 
         .motionMeta {
@@ -261,7 +251,7 @@ function MotionCard({
         .metaValue {
           font-size: 13.5px;
           line-height: 1.55;
-          color: ${COLORS.blueDeep};
+          color: ${COLORS.blue};
           margin: 0;
         }
 
@@ -281,7 +271,7 @@ function MotionCard({
 
         .deadlineItem { font-size: 13.5px; line-height: 1.55; }
         .deadlineLabel { color: ${COLORS.blueFade}; }
-        .deadlineDate { color: ${COLORS.blueDeep}; font-weight: 500; }
+        .deadlineDate { color: ${COLORS.blue}; font-weight: 500; }
 
         .deadlineStatus {
           font-size: 11.5px;
@@ -303,14 +293,13 @@ function MotionCard({
           text-decoration: underline;
           text-underline-offset: 2px;
         }
-        .motionLink:hover { color: ${COLORS.blueDeep}; }
 
         @media (min-width: 700px) {
-          .motionToggle { padding: 18px 22px; }
+          .motionToggle { padding: 16px 20px; }
           .motionCode { font-size: 11px; }
-          .motionTitle { font-size: 17.5px; }
-          .motionContent { padding: 0 22px 20px; }
-          .motionSummary { font-size: 15px; margin-top: 16px; }
+          .motionTitle { font-size: 16.5px; }
+          .motionContent { padding: 0 20px 18px; }
+          .motionSummary { font-size: 14.5px; margin-top: 16px; }
           .motionMeta {
             display: grid;
             grid-template-columns: 1fr 1.4fr;
@@ -325,45 +314,10 @@ function MotionCard({
 }
 
 export default function MotionList({ motions }: { motions: Motion[] }) {
-  // We use a 3-state ready signal: null = not yet checked viewport.
-  // Only render cards once we know the viewport, so each MotionCard mounts
-  // exactly once with the correct defaultOpen and useState locks in correctly.
-  const [defaultOpen, setDefaultOpen] = useState<boolean | null>(null);
-
-  useEffect(() => {
-    const isMobile = window.matchMedia("(max-width: 699px)").matches;
-    setDefaultOpen(!isMobile);
-  }, []);
-
-  // Show skeleton while waiting for viewport check (avoids flash).
-  if (defaultOpen === null) {
-    return (
-      <ol className="motionsListSkeleton" aria-hidden="true">
-        {motions.map((m) => (
-          <li key={m.id} className="skeletonItem" />
-        ))}
-        <style>{`
-          .motionsListSkeleton {
-            list-style: none;
-            padding: 0;
-            margin: 0;
-          }
-          .skeletonItem {
-            background: ${COLORS.cream};
-            border: 1px solid ${COLORS.blue}33;
-            border-radius: 6px;
-            margin-bottom: 12px;
-            height: 64px;
-          }
-        `}</style>
-      </ol>
-    );
-  }
-
   return (
     <ol className="motionsList">
       {motions.map((m) => (
-        <MotionCard key={m.id} motion={m} defaultOpen={defaultOpen} />
+        <MotionCard key={m.id} motion={m} />
       ))}
       <style>{`
         .motionsList { list-style: none; padding: 0; margin: 0; }

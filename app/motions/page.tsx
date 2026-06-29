@@ -10,32 +10,9 @@ export const metadata = {
 
 const COLORS = {
   blue: "#2f58b8",
-  blueDeep: "#1f3d8a",
-  blueFade: "#7a8fc2",
+  blueFade: "rgba(47, 88, 184, 0.6)",
   cream: "#f4f1ec",
 };
-
-function BurstStar({ size = 20 }: { size?: number }) {
-  return (
-    <svg width={size} height={size} viewBox="0 0 100 100" fill="currentColor" aria-hidden="true">
-      <path d="M50 0 L55 45 L100 50 L55 55 L50 100 L45 55 L0 50 L45 45 Z" />
-    </svg>
-  );
-}
-function ChubbyStar({ size = 16 }: { size?: number }) {
-  return (
-    <svg width={size} height={size} viewBox="0 0 100 100" fill="currentColor" aria-hidden="true">
-      <path d="M50 4 L63 36 L98 40 L72 62 L80 96 L50 78 L20 96 L28 62 L2 40 L37 36 Z" />
-    </svg>
-  );
-}
-function Dot({ size = 6 }: { size?: number }) {
-  return (
-    <svg width={size} height={size} viewBox="0 0 100 100" fill="currentColor" aria-hidden="true">
-      <circle cx="50" cy="50" r="40" />
-    </svg>
-  );
-}
 
 export default function MotionsPage() {
   return (
@@ -49,21 +26,18 @@ export default function MotionsPage() {
           </div>
 
           <header className="pageHeader">
-            <div className="logoWrap">
-              <span className="spark sparkA" style={{ color: COLORS.blue }}>
-                <BurstStar size={22} />
-              </span>
-              <span className="spark sparkB" style={{ color: COLORS.blue }}>
-                <Dot size={6} />
-              </span>
-              <span className="spark sparkC" style={{ color: COLORS.blue }}>
-                <ChubbyStar size={14} />
-              </span>
-
+            <div className="heroWrap">
+              <img src="/stars.png" alt="" aria-hidden="true" className="heroStarsLeft" />
               <img
                 src="/STAYinLA_LogoBlue.png"
                 alt="Stay in LA"
                 className="siteLogo"
+              />
+              <img
+                src="/stars.png"
+                alt=""
+                aria-hidden="true"
+                className="heroStarsRight"
               />
             </div>
 
@@ -74,16 +48,12 @@ export default function MotionsPage() {
               specific actions on specific timelines. Most of those deadlines
               have come and gone.
             </p>
-
             <p className="collapseHint">Tap any motion to expand.</p>
           </header>
 
           <MotionList motions={MOTIONS} />
 
           <div className="footerNav">
-            <span className="footSpark" style={{ color: COLORS.blue }}>
-              <BurstStar size={16} />
-            </span>
             <Link href="/" className="backLink">
               ← Back to home
             </Link>
@@ -95,7 +65,7 @@ export default function MotionsPage() {
         .page {
           min-height: 100vh;
           background: ${COLORS.cream};
-          color: ${COLORS.blueDeep};
+          color: ${COLORS.blue};
           font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
           overflow-x: hidden;
           -webkit-font-smoothing: antialiased;
@@ -117,43 +87,43 @@ export default function MotionsPage() {
           font-size: 14px;
           font-weight: 500;
         }
-        .backLink:hover {
-          text-decoration: underline;
-          text-underline-offset: 3px;
-        }
+        .backLink:hover { text-decoration: underline; text-underline-offset: 3px; }
 
         .pageHeader {
           text-align: center;
           margin-bottom: 28px;
         }
 
-        .logoWrap {
-          position: relative;
-          display: inline-block;
-          padding: 18px 50px;
-          margin-bottom: 14px;
+        .heroWrap {
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          gap: 0;
+          margin-bottom: 18px;
         }
 
         .siteLogo {
           display: block;
-          width: clamp(150px, 24vw, 220px);
+          width: clamp(180px, 32vw, 320px);
           height: auto;
-          margin: 0 auto;
-          position: relative;
-          z-index: 1;
+          flex-shrink: 0;
         }
 
-        .spark { position: absolute; pointer-events: none; }
-        .sparkA { top: 4px; left: 0; }
-        .sparkB { top: 24px; right: 8px; }
-        .sparkC { bottom: 6px; right: 36px; }
+        .heroStarsLeft,
+        .heroStarsRight {
+          width: clamp(70px, 12vw, 120px);
+          height: auto;
+          display: block;
+          flex-shrink: 0;
+        }
+        .heroStarsRight { transform: scaleX(-1); }
 
         .pageTitle {
           font-size: 22px;
           line-height: 1.2;
           font-weight: 600;
           margin: 0 0 12px;
-          color: ${COLORS.blueDeep};
+          color: ${COLORS.blue};
           letter-spacing: -0.005em;
         }
 
@@ -162,37 +132,25 @@ export default function MotionsPage() {
           margin: 0 auto 14px;
           font-size: 14.5px;
           line-height: 1.6;
-          color: ${COLORS.blueDeep};
+          color: ${COLORS.blue};
         }
 
         .collapseHint {
-          display: block;
           font-size: 12px;
           color: ${COLORS.blueFade};
           margin: 0;
           font-style: italic;
         }
 
-        @media (min-width: 700px) {
-          .collapseHint { display: none; }
-        }
-
         .footerNav {
           margin-top: 36px;
           text-align: center;
-          position: relative;
-        }
-
-        .footSpark {
-          display: inline-block;
-          margin-right: 12px;
-          vertical-align: middle;
         }
 
         @media (min-width: 700px) {
           .container { padding: 36px 28px 100px; }
           .pageHeader { margin-bottom: 36px; }
-          .logoWrap { padding: 22px 60px; }
+          .heroWrap { gap: 8px; margin-bottom: 22px; }
           .pageTitle { font-size: 26px; }
           .pageIntro { font-size: 15.5px; }
         }

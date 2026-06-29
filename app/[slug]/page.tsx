@@ -8,8 +8,7 @@ import { getMotionsByIds } from "../motions";
 
 const COLORS = {
   blue: "#2f58b8",
-  blueDeep: "#1f3d8a",
-  blueFade: "#7a8fc2",
+  blueFade: "rgba(47, 88, 184, 0.6)",
   cream: "#f4f1ec",
   red: "#a3261c",
 };
@@ -42,21 +41,6 @@ function unfillTemplate(filled: string, headName: string, senderName: string) {
     result = result.replaceAll(senderName, "[Your name]");
   }
   return result;
-}
-
-function BurstStar({ size = 18 }: { size?: number }) {
-  return (
-    <svg width={size} height={size} viewBox="0 0 100 100" fill="currentColor" aria-hidden="true">
-      <path d="M50 0 L55 45 L100 50 L55 55 L50 100 L45 55 L0 50 L45 45 Z" />
-    </svg>
-  );
-}
-function ChubbyStar({ size = 14 }: { size?: number }) {
-  return (
-    <svg width={size} height={size} viewBox="0 0 100 100" fill="currentColor" aria-hidden="true">
-      <path d="M50 4 L63 36 L98 40 L72 62 L80 96 L50 78 L20 96 L28 62 L2 40 L37 36 Z" />
-    </svg>
-  );
 }
 
 export default function DepartmentHeadPage() {
@@ -164,29 +148,21 @@ export default function DepartmentHeadPage() {
         </div>
 
         <section className="profile">
-          <div className="profilePhotoWrap">
-            <span className="profSpark profSparkA" style={{ color: COLORS.blue }}>
-              <BurstStar size={20} />
-            </span>
-            <span className="profSpark profSparkB" style={{ color: COLORS.blue }}>
-              <ChubbyStar size={12} />
-            </span>
-            <div className="profilePhoto">
-              {head.photo ? (
-                <img src={head.photo} alt={head.name || ""} />
-              ) : (
-                <div className="profileSilhouette">
-                  <svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
-                    <circle cx="50" cy="36" r="18" fill="currentColor" opacity="0.85" />
-                    <path
-                      d="M14 100 C 14 70, 30 58, 50 58 C 70 58, 86 70, 86 100 Z"
-                      fill="currentColor"
-                      opacity="0.85"
-                    />
-                  </svg>
-                </div>
-              )}
-            </div>
+          <div className="profilePhoto">
+            {head.photo ? (
+              <img src={head.photo} alt={head.name || ""} />
+            ) : (
+              <div className="profileSilhouette">
+                <svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                  <circle cx="50" cy="36" r="18" fill="currentColor" opacity="0.85" />
+                  <path
+                    d="M14 100 C 14 70, 30 58, 50 58 C 70 58, 86 70, 86 100 Z"
+                    fill="currentColor"
+                    opacity="0.85"
+                  />
+                </svg>
+              </div>
+            )}
           </div>
           <div className="profileText">
             <div className="profileKicker">{head.department}</div>
@@ -281,7 +257,7 @@ const pageStyles = `
   .page {
     min-height: 100vh;
     background: ${COLORS.cream};
-    color: ${COLORS.blueDeep};
+    color: ${COLORS.blue};
     font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
     overflow-x: hidden;
     -webkit-font-smoothing: antialiased;
@@ -312,12 +288,6 @@ const pageStyles = `
     margin-bottom: 36px;
   }
 
-  .profilePhotoWrap {
-    position: relative;
-    width: 160px;
-    margin: 0 auto;
-  }
-
   .profilePhoto {
     width: 160px;
     aspect-ratio: 1 / 1;
@@ -328,14 +298,11 @@ const pageStyles = `
     display: flex;
     align-items: center;
     justify-content: center;
+    margin: 0 auto;
   }
   .profilePhoto img { width: 100%; height: 100%; object-fit: cover; display: block; }
   .profileSilhouette { width: 55%; height: 55%; display: flex; align-items: center; justify-content: center; }
   .profileSilhouette svg { width: 100%; height: 100%; }
-
-  .profSpark { position: absolute; pointer-events: none; }
-  .profSparkA { top: -12px; left: -16px; }
-  .profSparkB { bottom: 6px; right: -10px; }
 
   .profileText { text-align: center; }
   .profileKicker {
@@ -351,7 +318,7 @@ const pageStyles = `
     line-height: 1.15;
     font-weight: 600;
     margin: 0 0 4px;
-    color: ${COLORS.blueDeep};
+    color: ${COLORS.blue};
   }
   .profilePos {
     font-size: 14px;
@@ -363,7 +330,7 @@ const pageStyles = `
     line-height: 1.65;
     margin: 0;
     text-align: left;
-    color: ${COLORS.blueDeep};
+    color: ${COLORS.blue};
   }
 
   .sectionTitle {
@@ -401,13 +368,13 @@ const pageStyles = `
     font-weight: 600;
     line-height: 1.25;
     margin-bottom: 8px;
-    color: ${COLORS.blueDeep};
+    color: ${COLORS.blue};
   }
   .motionRefSummary {
     font-size: 13.5px;
     line-height: 1.55;
     margin: 0 0 10px;
-    color: ${COLORS.blueDeep};
+    color: ${COLORS.blue};
   }
   .motionRefLink {
     color: ${COLORS.blue};
@@ -416,13 +383,12 @@ const pageStyles = `
     text-decoration: underline;
     text-underline-offset: 2px;
   }
-  .motionRefLink:hover { color: ${COLORS.blueDeep}; }
 
   .emailSection { margin-bottom: 16px; }
   .emailHeader { margin-bottom: 14px; }
   .emailRecipient {
     font-size: 13.5px;
-    color: ${COLORS.blueDeep};
+    color: ${COLORS.blue};
     padding: 9px 12px;
     background: ${COLORS.cream};
     border: 1px solid ${COLORS.blue}33;
@@ -460,7 +426,7 @@ const pageStyles = `
     padding: 9px 11px;
     border: 1px solid ${COLORS.blue}55;
     background: #fff;
-    color: ${COLORS.blueDeep};
+    color: ${COLORS.blue};
     border-radius: 4px;
     font-size: 14.5px;
     font-family: inherit;
@@ -474,7 +440,7 @@ const pageStyles = `
     border-radius: 4px;
     border: 1px solid ${COLORS.blue}55;
     background: #fff;
-    color: ${COLORS.blueDeep};
+    color: ${COLORS.blue};
     padding: 11px;
     outline: none;
     font-size: 14px;
@@ -497,7 +463,6 @@ const pageStyles = `
     cursor: pointer;
     font-family: inherit;
   }
-  .sendButton:hover { background: ${COLORS.blueDeep}; }
   .sendButton:disabled { opacity: 0.6; cursor: default; }
 
   .notice {
@@ -507,10 +472,10 @@ const pageStyles = `
     font-size: 13.5px;
     line-height: 1.5;
   }
-  .noticeSuccess { background: ${COLORS.blue}14; color: ${COLORS.blueDeep}; }
+  .noticeSuccess { background: ${COLORS.blue}14; color: ${COLORS.blue}; }
   .noticeError { background: #fbeae8; color: ${COLORS.red}; }
 
-  .notFound { text-align: center; padding: 50px 20px; color: ${COLORS.blueDeep}; }
+  .notFound { text-align: center; padding: 50px 20px; color: ${COLORS.blue}; }
   .notFoundKicker {
     font-size: 11px;
     font-weight: 600;
@@ -519,7 +484,7 @@ const pageStyles = `
     color: ${COLORS.blue};
     margin-bottom: 8px;
   }
-  .notFoundTitle { font-size: 22px; font-weight: 600; margin: 0 0 10px; color: ${COLORS.blueDeep}; }
+  .notFoundTitle { font-size: 22px; font-weight: 600; margin: 0 0 10px; color: ${COLORS.blue}; }
   .notFoundBody { font-size: 14px; color: ${COLORS.blueFade}; margin: 0 0 20px; }
 
   @media (min-width: 700px) {
@@ -529,8 +494,7 @@ const pageStyles = `
       gap: 28px;
       margin-bottom: 44px;
     }
-    .profilePhotoWrap { width: 180px; margin: 0; }
-    .profilePhoto { width: 180px; }
+    .profilePhoto { width: 180px; margin: 0; }
     .profileText { text-align: left; }
     .profileName { font-size: 30px; }
     .motionsList { grid-template-columns: repeat(2, minmax(0, 1fr)); }

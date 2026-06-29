@@ -1,21 +1,19 @@
 // The 7 Keep Hollywood Home motions that PASSED city council unanimously on
-// March 4, 2026. Each motion directs city departments to take specific
-// actions within specific deadlines. As of mid-2026, most of those deadlines
-// have passed without action.
+// March 4, 2026.
 
 export type Deadline = {
-  label: string;       // e.g. "60-day report" or "Ordinance draft"
-  date: string;        // ISO date string, e.g. "2026-05-03"
+  label: string;
+  date: string; // ISO date "YYYY-MM-DD"
 };
 
 export type Motion = {
-  id: string;                       // same as council file number
-  code: string;                     // displayed council file number
+  id: string;
+  code: string;
   title: string;
   summary: string;
   responsibleDepartments: string[];
-  deadlines: Deadline[];            // empty array if no deadline in motion
-  link?: string;                    // link to LA City Clerk record
+  deadlines: Deadline[];
+  link?: string;
 };
 
 export const MOTIONS: Motion[] = [
@@ -33,9 +31,7 @@ export const MOTIONS: Motion[] = [
       "LAFD",
       "LADOT",
     ],
-    deadlines: [
-      { label: "Ordinance draft", date: "2026-05-03" },
-    ],
+    deadlines: [{ label: "Ordinance draft", date: "2026-05-03" }],
     link: "https://cityclerk.lacity.org/lacityclerkconnect/index.cfm?fa=ccfi.viewrecord&cfnumber=25-1498",
   },
   {
@@ -66,9 +62,7 @@ export const MOTIONS: Motion[] = [
       "EWDD",
       "FilmLA",
     ],
-    deadlines: [
-      { label: "Initiative launch", date: "2026-06-02" },
-    ],
+    deadlines: [{ label: "Initiative launch", date: "2026-06-02" }],
     link: "https://cityclerk.lacity.org/lacityclerkconnect/index.cfm?fa=ccfi.viewrecord&cfnumber=25-1501",
   },
   {
@@ -109,9 +103,7 @@ export const MOTIONS: Motion[] = [
       "Board of Public Works",
       "Chief Legislative Analyst",
     ],
-    deadlines: [
-      { label: "Program design", date: "2026-05-03" },
-    ],
+    deadlines: [{ label: "Program design", date: "2026-05-03" }],
     link: "https://cityclerk.lacity.org/lacityclerkconnect/index.cfm?fa=ccfi.viewrecord&cfnumber=25-1503",
   },
   {
@@ -129,9 +121,7 @@ export const MOTIONS: Motion[] = [
       "BPW Film Liaison",
       "FilmLA",
     ],
-    deadlines: [
-      { label: "Framework report", date: "2026-06-02" },
-    ],
+    deadlines: [{ label: "Framework report", date: "2026-06-02" }],
     link: "https://cityclerk.lacity.org/lacityclerkconnect/index.cfm?fa=ccfi.viewrecord&cfnumber=25-1509-S1",
   },
   {
@@ -140,11 +130,7 @@ export const MOTIONS: Motion[] = [
     title: "Regional MOUs and COG Alignment",
     summary:
       "Within 180 days, EWDD and FilmLA were directed to negotiate formal agreements with neighboring cities and Councils of Government — coordinating permitting thresholds, sharing best practices for public facilities, aligning business-development strategies, improving regional workforce training, and collaborating on soundstage expansion. A 120-day status report was also required. The aim: productions stop getting stuck navigating wildly different rules across jurisdictional lines within the LA region.",
-    responsibleDepartments: [
-      "EWDD",
-      "FilmLA",
-      "Mayor's Office",
-    ],
+    responsibleDepartments: ["EWDD", "FilmLA", "Mayor's Office"],
     deadlines: [
       { label: "Status report", date: "2026-07-02" },
       { label: "Regional MOUs", date: "2026-08-31" },
